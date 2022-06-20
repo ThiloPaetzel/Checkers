@@ -12,6 +12,7 @@ namespace Checkers
 {
     public partial class Form1 : Form
     {
+        bool isKing;
         int numberOfWhite;
         int numberOfBlack;
         int btnMoveRow;
@@ -21,6 +22,8 @@ namespace Checkers
         Button btnMove;
         bool whiteToplay;
         Bitmap white = new Bitmap(@"Images/White.png");
+        Bitmap whiteKing = new Bitmap(@"Images/White king.png");
+        Bitmap blackKing = new Bitmap(@"Images/Black king.png");
         Bitmap black = new Bitmap(@"Images/Black.png");
         bool isPair;
         int nbr = 0;
@@ -120,6 +123,10 @@ namespace Checkers
             {
                 if (btnToMove == true && hasBeenChose == true && btnMove.Tag == "White")
                 {
+                    if (btnMove.Image == whiteKing)
+                    {
+                        isKing = true;
+                    }
                     btnMove.Image = null;
                     btnMove.BackColor = Color.ForestGreen;
                     btnMove.Tag = "Placable";
@@ -138,6 +145,17 @@ namespace Checkers
                         playCounter++;
                         hasBeenChose = false;
                         lblTour.Text = "Tour : Black";
+                        if (rowBtnClickedCell == 7)
+                        {
+                            btnClicked.Image = whiteKing;
+                        }
+                    }
+                    else if (isKing == true)
+                    {
+                        btnClicked.Image = whiteKing;
+                        btnClicked.Tag = "White";
+                        isKing = false;
+                        playCounter++;
                     }
 
                     //Mange un noir en allant vers la droite
@@ -154,6 +172,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack--;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                     }
 
@@ -174,6 +196,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack -= 2;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                         //Gauche droite
                         else if (arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Tag == "Black" && arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 1].Tag == "Black")
@@ -189,6 +215,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack -= 2;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                     }
 
@@ -208,6 +238,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack -= 2;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                         
                     }
@@ -228,6 +262,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack -= 2;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                     }
 
@@ -245,6 +283,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfBlack--;
                             lblTour.Text = "Tour : Black";
+                            if (rowBtnClickedCell == 7)
+                            {
+                                btnClicked.Image = whiteKing;
+                            }
                         }
                     }
                 }
@@ -272,6 +314,10 @@ namespace Checkers
                         playCounter++;
                         hasBeenChose = false;
                         lblTour.Text = "Tour : White";
+                        if (rowBtnClickedCell == 0)
+                        {
+                            btnClicked.Image = blackKing;
+                        }
                     }
                     //Gauche
                     else if (btnMoveRow - 2 == rowBtnClickedCell && btnMoveCol - 2 == colBtnClickedCell)
@@ -287,6 +333,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite --;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
 
                     }
@@ -304,6 +354,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite--;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
                     }
                     //Droite droite
@@ -322,6 +376,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite-=2;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
                     }
                     //Gauche gauche
@@ -340,6 +398,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite -= 2;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
                     }
                     // droite gauche gauche droite
@@ -359,6 +421,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite -= 2;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
                         //gauche droite
                         else if (arrButtons[rowBtnClickedCell + 1,colBtnClickedCell - 1].Tag == "White" && arrButtons[rowBtnClickedCell + 3,colBtnClickedCell - 1].Tag == "White")
@@ -374,6 +440,10 @@ namespace Checkers
                             hasBeenChose = false;
                             numberOfWhite -= 2;
                             lblTour.Text = "Tour : White";
+                            if (rowBtnClickedCell == 0)
+                            {
+                                btnClicked.Image = blackKing;
+                            }
                         }
                     }
                 }
@@ -381,6 +451,22 @@ namespace Checkers
             btnToMove = false;
             lblNbrBlack.Text = "Black : " + Convert.ToString(numberOfBlack);
             lblNbrWhite.Text = "White : " + Convert.ToString(numberOfWhite);
+            if (numberOfWhite == 0)
+            {
+                DialogResult win = MessageBox.Show("Les noirs ont gagnés", "Partie terminée", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (win == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+            }
+            if (numberOfBlack == 0)
+            {
+                DialogResult win = MessageBox.Show("Les blancs ont gagnés", "Partie terminée", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (win == DialogResult.Yes)
+                {
+                    Application.Restart();
+                }
+            }
         }
     }
 }
