@@ -12,14 +12,16 @@ namespace Checkers
 {
     public partial class Form1 : Form
     {
+        int numberOfWhite;
+        int numberOfBlack;
         int btnMoveRow;
         int btnMoveCol;
         bool btnToMove;
         bool hasBeenChose;
         Button btnMove;
         bool whiteToplay;
-        Bitmap white = new Bitmap(@"F:\05-repertoires-ict-ssd\AUTRES\Checkers\Checkers\Images\White.png");
-        Bitmap black = new Bitmap(@"F:\05-repertoires-ict-ssd\AUTRES\Checkers\Checkers\Images\Black.png");
+        Bitmap white = new Bitmap(@"Images/White.png");
+        Bitmap black = new Bitmap(@"Images/Black.png");
         bool isPair;
         int nbr = 0;
         int counter = 0;
@@ -30,11 +32,13 @@ namespace Checkers
         {
             InitializeComponent();
             InitGame();
+            lblNbrBlack.Text = "Black : " + Convert.ToString(numberOfBlack);
+            lblNbrWhite.Text = "White : " + Convert.ToString(numberOfWhite);
+            lblTour.Text = "Tour : White";
         }
 
         private void InitGame()
         {
-
             for (int i = 0; i < NBROWCOLS; i++)
             {
                 for (int j = 0; j < NBROWCOLS; j++)
@@ -43,8 +47,6 @@ namespace Checkers
                     arrButtons[i, j] = button;
                     tableLayoutPanel1.Controls.Add(button,j,i);
                     button.Anchor = (AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top);
-                    
-
                     if (counter == 8 || counter == 16 || counter == 24 ||counter == 32 || counter == 40 || counter == 48 || counter == 56 || counter == 64)
                     {
                         nbr++;
@@ -73,17 +75,17 @@ namespace Checkers
                             arrButtons[i, j].Tag = "Placable";
                         }
                     }
-
                     if (nbr <= 2 && arrButtons[i,j].Tag == "Placable")
                     {
                         arrButtons[i, j].Image = white;
                         arrButtons[i, j].Tag = "White";
+                        numberOfWhite++;
                     }
-
                     if (nbr >= 5 && arrButtons[i,j].Tag == "Placable")
                     {
                         arrButtons[i, j].Image = black;
                         arrButtons[i, j].Tag = "Black";
+                        numberOfBlack++;
                     }
                     counter++;
                     arrButtons[i, j].Click += new EventHandler(this.arrButtons_click);
@@ -93,7 +95,7 @@ namespace Checkers
 
         private void arrButtons_click(object sender, EventArgs e)
         {
-            Button button = new Button();
+            
             Button btnClicked = (Button)sender;
             int rowBtnClickedCell = tableLayoutPanel1.GetRow(btnClicked);//Row of the button clicked
             int colBtnClickedCell = tableLayoutPanel1.GetColumn(btnClicked);//Collumn of the button clicked
@@ -101,8 +103,8 @@ namespace Checkers
             {
                 btnToMove = true;
                 btnMove = btnClicked;
-                btnMoveRow = tableLayoutPanel1.GetRow(btnClicked);
-                btnMoveCol = tableLayoutPanel1.GetColumn(btnClicked);
+                btnMoveRow = tableLayoutPanel1.GetRow(btnClicked);//Row of the button to move
+                btnMoveCol = tableLayoutPanel1.GetColumn(btnClicked);//Col of the button to move
                 hasBeenChose = true;
             }
             if (playCounter % 2 == 0)
@@ -135,6 +137,7 @@ namespace Checkers
                         btnClicked.Tag = "White";
                         playCounter++;
                         hasBeenChose = false;
+                        lblTour.Text = "Tour : Black";
                     }
 
                     //Mange un noir en allant vers la droite
@@ -149,6 +152,82 @@ namespace Checkers
                             btnClicked.Tag = "White";
                             playCounter++;
                             hasBeenChose = false;
+                            numberOfBlack--;
+                            lblTour.Text = "Tour : Black";
+                        }
+                    }
+
+                    //Mange deux noir premier a droite puis gauche ou gauche droite
+                    else if (btnMoveRow + 4 == rowBtnClickedCell && btnMoveCol == colBtnClickedCell)
+                    {
+                        //Droite gauche
+                        if (arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Tag == "Black" && arrButtons[rowBtnClickedCell - 3,colBtnClickedCell + 1].Tag == "Black")
+                        {
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 1].Tag = "Placable";
+
+                            btnClicked.Image = white;
+                            btnClicked.Tag = "White";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfBlack -= 2;
+                            lblTour.Text = "Tour : Black";
+                        }
+                        //Gauche droite
+                        else if (arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Tag == "Black" && arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 1].Tag == "Black")
+                        {
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 1].Tag = "Placable";
+
+                            btnClicked.Image = white;
+                            btnClicked.Tag = "White";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfBlack -= 2;
+                            lblTour.Text = "Tour : Black";
+                        }
+                    }
+
+                    //Gauche Gauche
+                    else if (btnMoveRow + 4 == rowBtnClickedCell && btnMoveCol - 4 == colBtnClickedCell)
+                    {
+                        if (arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Tag == "Black" && arrButtons[rowBtnClickedCell - 3, colBtnClickedCell + 3].Tag == "Black")
+                        {
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell + 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell + 3].Image = null;
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell + 3].Tag = "Placable";
+
+                            btnClicked.Image = white;
+                            btnClicked.Tag = "White";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfBlack -= 2;
+                            lblTour.Text = "Tour : Black";
+                        }
+                        
+                    }
+
+                    //Droite Droite
+                    else if (btnMoveRow + 4 == rowBtnClickedCell && btnMoveCol + 4 == colBtnClickedCell)
+                    {
+                        if (arrButtons[rowBtnClickedCell - 1,colBtnClickedCell -1].Tag == "Black" && arrButtons[rowBtnClickedCell - 3,colBtnClickedCell- 3].Tag == "Black")
+                        {
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell - 1, colBtnClickedCell - 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 3].Image = null;
+                            arrButtons[rowBtnClickedCell - 3, colBtnClickedCell - 3].Tag = "Placable";
+
+                            btnClicked.Image = white;
+                            btnClicked.Tag = "White";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfBlack -= 2;
+                            lblTour.Text = "Tour : Black";
                         }
                     }
 
@@ -164,6 +243,8 @@ namespace Checkers
                             btnClicked.Tag = "White";
                             playCounter++;
                             hasBeenChose = false;
+                            numberOfBlack--;
+                            lblTour.Text = "Tour : Black";
                         }
                     }
                 }
@@ -190,9 +271,8 @@ namespace Checkers
                         btnClicked.Tag = "Black";
                         playCounter++;
                         hasBeenChose = false;
+                        lblTour.Text = "Tour : White";
                     }
-
-
                     //Gauche
                     else if (btnMoveRow - 2 == rowBtnClickedCell && btnMoveCol - 2 == colBtnClickedCell)
                     {
@@ -205,6 +285,8 @@ namespace Checkers
                             btnClicked.Tag = "Black";
                             playCounter++;
                             hasBeenChose = false;
+                            numberOfWhite --;
+                            lblTour.Text = "Tour : White";
                         }
 
                     }
@@ -220,14 +302,85 @@ namespace Checkers
                             btnClicked.Tag = "Black";
                             playCounter++;
                             hasBeenChose = false;
+                            numberOfWhite--;
+                            lblTour.Text = "Tour : White";
                         }
+                    }
+                    //Droite droite
+                    else if (btnMoveRow - 4 == rowBtnClickedCell && btnMoveCol + 4 == colBtnClickedCell)
+                    {
+                        if (arrButtons[rowBtnClickedCell + 1, colBtnClickedCell - 1].Tag == "White" && arrButtons[rowBtnClickedCell + 3,colBtnClickedCell - 3].Tag == "White")
+                        {
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell - 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell - 3].Image = null;
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell - 3].Tag = "Placable";
 
+                            btnClicked.Image = black;
+                            btnClicked.Tag = "Black";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfWhite-=2;
+                            lblTour.Text = "Tour : White";
+                        }
+                    }
+                    //Gauche gauche
+                    else if (btnMoveRow - 4 == rowBtnClickedCell && btnMoveCol - 4 == colBtnClickedCell)
+                    {
+                        if (arrButtons[rowBtnClickedCell + 1, colBtnClickedCell + 1].Tag == "White" && arrButtons[rowBtnClickedCell + 3, colBtnClickedCell + 3].Tag == "White")
+                        {
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell + 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell + 3].Image = null;
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell + 3].Tag = "Placable";
 
-                       
+                            btnClicked.Image = black;
+                            btnClicked.Tag = "Black";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfWhite -= 2;
+                            lblTour.Text = "Tour : White";
+                        }
+                    }
+                    // droite gauche gauche droite
+                    else if (btnMoveRow - 4 == rowBtnClickedCell && btnMoveCol == colBtnClickedCell)
+                    {
+                        //droite gauche
+                        if (arrButtons[rowBtnClickedCell + 1,colBtnClickedCell + 1].Tag == "White" && arrButtons[rowBtnClickedCell + 3,colBtnClickedCell + 1].Tag == "White")
+                        {
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell + 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell + 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell + 1].Tag = "Placable";
+
+                            btnClicked.Image = black;
+                            btnClicked.Tag = "Black";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfWhite -= 2;
+                            lblTour.Text = "Tour : White";
+                        }
+                        //gauche droite
+                        else if (arrButtons[rowBtnClickedCell + 1,colBtnClickedCell - 1].Tag == "White" && arrButtons[rowBtnClickedCell + 3,colBtnClickedCell - 1].Tag == "White")
+                        {
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 1, colBtnClickedCell - 1].Tag = "Placable";
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell - 1].Image = null;
+                            arrButtons[rowBtnClickedCell + 3, colBtnClickedCell - 1].Tag = "Placable";
+
+                            btnClicked.Image = black;
+                            btnClicked.Tag = "Black";
+                            playCounter++;
+                            hasBeenChose = false;
+                            numberOfWhite -= 2;
+                            lblTour.Text = "Tour : White";
+                        }
                     }
                 }
             }
             btnToMove = false;
+            lblNbrBlack.Text = "Black : " + Convert.ToString(numberOfBlack);
+            lblNbrWhite.Text = "White : " + Convert.ToString(numberOfWhite);
         }
     }
 }
